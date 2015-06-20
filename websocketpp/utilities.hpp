@@ -30,6 +30,7 @@
 
 #include <websocketpp/common/stdint.hpp>
 
+#include <cctype>
 #include <algorithm>
 #include <string>
 #include <locale>
