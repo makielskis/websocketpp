@@ -411,23 +411,39 @@ void md5_finish(md5_state_t *pms, md5_byte_t digest[16]) {
 }
 
 // some convenience c++ functions
+inline std::string md5_hash_string(md5_byte_t const * data, std::size_t len) {
+  char digest[16];
+
+  md5_state_t state;
+
+  md5_init(&state);
+  md5_append(&state, data, len);
+  md5_finish(&state, (md5_byte_t *)digest);
+
+  std::string ret;
+  ret.resize(16);
+  std::copy(digest,digest+16,ret.begin());
+
+  return ret;
+}
+
 inline std::string md5_hash_string(std::string const & s) {
-	char digest[16];
-
-	md5_state_t state;
-
-	md5_init(&state);
-	md5_append(&state, (md5_byte_t const *)s.c_str(), s.size());
-	md5_finish(&state, (md5_byte_t *)digest);
-
-    std::string ret;
-    ret.resize(16);
-    std::copy(digest,digest+16,ret.begin());
-
-	return ret;
+  return md5_hash_string((md5_byte_t const *)s.c_str(), s.size());
 }
 
 const char hexval[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+inline std::string md5_hash_hex(md5_byte_t const * data, std::size_t len) {
+    std::string hash = md5_hash_string(data, len);
+    std::string hex;
+
+    for (size_t i = 0; i < hash.size(); i++) {
+        hex.push_back(hexval[((hash[i] >> 4) & 0xF)]);
+        hex.push_back(hexval[(hash[i]) & 0x0F]);
+    }
+
+    return hex;
+}
 
 inline std::string md5_hash_hex(std::string const & input) {
     std::string hash = md5_hash_string(input);
@@ -445,3 +461,4 @@ inline std::string md5_hash_hex(std::string const & input) {
 } // websocketpp
 
 #endif // WEBSOCKETPP_COMMON_MD5_HPP
+
