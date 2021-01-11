@@ -41,7 +41,7 @@
 #endif
 
 
-#ifdef _WEBSOCKETPP_CPP11_STL_
+#if true
     // This flag indicates that all of the C++11 language features are available
     // to us.
     #ifndef _WEBSOCKETPP_NOEXCEPT_TOKEN_
